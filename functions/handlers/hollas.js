@@ -74,7 +74,7 @@ exports.getHolla = (req, res) => {
 }
 
 exports.commentOnHolla = (req, res) => {
-  if(req.body.body.trim() === '') return res.status(400).json({ error: 'Must not be empty' });
+  if(req.body.body.trim() === '') return res.status(400).json({ comment: 'Must not be empty' });
 
   const newComment = {
     body: req.body.body,
@@ -200,10 +200,10 @@ exports.deleteHolla = (req, res) => {
     }
   })
   .then(() => {
-    res.json({ message: 'Scream deleted successfully' });
+    res.json({ message: 'Holla deleted successfully' });
   })
   .catch(err => {
     console.error(err);
-    res.status(500).json({ error: err.code });
+    return res.status(500).json({ error: err.code });
   })
 }
