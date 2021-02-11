@@ -27,7 +27,7 @@ exports.signup = (req, res) => {
       .get()
       .then((doc) => {
         if (doc.exists) {
-          return res.status(400).json({ handle: "this handle is taken" });
+          return res.status(400).json({ handle: "Already taken" });
         } else {
           return firebase
             .auth()
@@ -89,7 +89,7 @@ exports.login = (req, res) => {
         console.error(err);
         // auth/wrong-password
         // auth/user-not-found
-        return res.status(403).json({ general: "Invalid credentials." });
+        return res.status(403).json({ general: "Invalid credentials" });
       });
 }
 
