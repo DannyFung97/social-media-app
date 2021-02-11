@@ -1,6 +1,7 @@
 const { db, admin } = require('../util/admin');
 
 const config = require('../util/config');
+const { uuid } = require("uuidv4");
 
 const firebase = require('firebase');
 firebase.initializeApp(config);
@@ -198,6 +199,8 @@ exports.uploadImage = (req, res) => {
   let imageFileName;
   let imageToBeUploaded = {};
 
+  const generatedToken = uuid();
+
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
     if(mimetype != 'image/jpeg' && mimetype != 'image/png') {
       return res.status(400).json({ error: 'Wrong file type submitted'});
@@ -213,12 +216,13 @@ exports.uploadImage = (req, res) => {
       resumable: false,
       metadata: {
         metadata: {
-          contentType: imageToBeUploaded.mimetype
+          contentType: imageToBeUploaded.mimetype,
+          firebaseStorageDownloadTokens: generatedToken,
         }
       }
     })
     .then(() => {
-      const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+      const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media&token=${generatedToken}`;
       return db.doc(`/users/${req.user.handle}`).update({ imageUrl });
     })
     .then(() => {

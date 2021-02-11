@@ -36,7 +36,7 @@ exports.postOneHolla = (req, res) => {
       .then((doc) => {
         const resHolla = newHolla;
         resHolla.hollaId = doc.id;
-        res.json({ resHolla });
+        res.json(resHolla);
       })
       .catch((err) => {
         res.status(500).json({ error: "something went wrong" });
